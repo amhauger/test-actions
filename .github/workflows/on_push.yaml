@@ -1,0 +1,17 @@
+name: tag on branch push
+
+on:
+  push
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out the repo at latest
+      uses: actions/checkout@v2
+
+    - name: Install required packages
+      run: go get -u ./...
+
+    - name: Get commit message
+      run: echo ${{ github.event.head_commit.message }}      
