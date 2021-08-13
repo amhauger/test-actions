@@ -12,9 +12,7 @@ jobs:
 
     - name: Install required packages
       run: go get -u ./...
-
-    - name: Get commit message
-      run: echo ${{ github.event.head_commit.message }} 
       
     - name: Run script
+      id: test-output
       run: ./.github/workflows/test.sh -n qa -m ${{ github.event.head_commit.message }}

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 MAJOR_VERSION=3
 MINOR_VERSION=0
 PATCH_VERSION=0
@@ -59,6 +61,8 @@ do
             m=${OPTARG}
             setVersion $m
             git tag -a $VERSION -m $m
+            git push origin $VERSION
+            echo "::set-output name=new_tag::$VERSION"
             ;;
         *)
             usage
