@@ -12,7 +12,11 @@ VERSION="qa-v0.0.0"
 usage() { echo "Usage: $0 [-n <qa|prod> environment] [-m <string> commit message]" 1>&2; exit 1;}
 
 getVersions() {
-    echo $1
+    # Set default MAJOR, MINOR, and PATCH versions
+    MAJOR_VERSION=3
+    MINOR_VERSION=-1
+    PATCH_VERSION=-1
+
     if [ ! -z "${1}" ]; then
         IFS='.'
         read -a strarr <<< "${1}"
@@ -29,10 +33,6 @@ getVersions() {
         if [ -z "$PATCH_VERSION" ]; then
             PATCH_VERSION=0
         fi
-    else
-        MAJOR_VERSION=3
-        MINOR_VERSION=-1
-        PATCH_VERSION=-1
     fi
 }
 
@@ -62,7 +62,6 @@ do
         m)
             m=${OPTARG}
             LATEST_TAG=$(git tag -l "v*" | tail -1 | sed 's/v//')
-            echo $LATEST_TAG
             getVersions $LATEST_TAG
             setVersion $m
             echo "::set-output name=new_tag::$VERSION"

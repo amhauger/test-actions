@@ -13,13 +13,31 @@ jobs:
     - name: Install required packages
       run: go get -u ./...
       
+    - name: Build binaries for archive
+      id: build-prod
+      run: go build
+
+    - name: Archive binaries
+      id: archive-prod
+      run: zip artifact.zip ./qtroller
+
     - name: Run script
       id: version-script
       run: ./.github/workflows/test.sh -m ${{ github.event.head_commit.message }}
 
-    - name: tag
+    - name: Tag
       id: autotagger
       if: steps.version-script.outputs.new_tag != ''
       run: |
         git tag -a ${{ steps.version-script.outputs.new_tag }} -m ${{ github.event.head_commit.message }}
         git push origin ${{ steps.version-script.outputs.new_tag }}
+
+    - name: Release
+      id: create-release
+      if: steps.autotagger.outputs.tagname != ''
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: ./qtroller/artifact.zip
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    
