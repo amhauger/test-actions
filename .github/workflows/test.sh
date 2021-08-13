@@ -17,7 +17,7 @@ getVersions() {
     MINOR_VERSION=-1
     PATCH_VERSION=-1
 
-    if [ -n $1 ]; then
+    if [ -n "$1" ]; then
         IFS='.'
         read -a strarr <<< "${1}"
         MAJOR_VERSION=3
@@ -62,6 +62,7 @@ do
         m)
             m=${OPTARG}
             LATEST_TAG=$(git tag -l "v*" | tail -1 | sed 's/v//')
+
             getVersions $LATEST_TAG
             setVersion $m
             echo "::set-output name=new_tag::$VERSION"
