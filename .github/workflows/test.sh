@@ -17,7 +17,11 @@ getVersions() {
     MINOR_VERSION=-1
     PATCH_VERSION=-1
 
-    if [ -n "${1}" ]; then
+    if [ -z $1 ]; then
+        MAJOR_VERSION=3
+        MINOR_VERSION=-1
+        PATCH_VERSION=-1
+    else
         IFS='.'
         read -a strarr <<< "${1}"
         MAJOR_VERSION=3
