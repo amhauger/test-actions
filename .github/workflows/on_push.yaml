@@ -23,7 +23,9 @@ jobs:
 
     - name: Run script
       id: version-script
-      run: ./.github/workflows/test.sh -m ${{ github.event.head_commit.message }}
+      run: |
+        git fetch --all --tags
+        ./.github/workflows/test.sh -m ${{ github.event.head_commit.message }}
 
     - name: Tag
       id: autotagger
