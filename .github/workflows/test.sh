@@ -63,6 +63,7 @@ do
             if [ -z $LATEST_TAG ]; then
                 LATEST_TAG="3.-1.-1"
             fi
+            
             getVersions $LATEST_TAG
             setVersion $m
             echo "::set-output name=new_tag::$VERSION"
