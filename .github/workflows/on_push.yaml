@@ -37,7 +37,7 @@ jobs:
       if: steps.autotagger.outputs.tagname != ''
       uses: ncipollo/release-action@v1
       with:
-        artifacts: ./qtroller/artifact.zip
+        artifacts: /home/runn/work/test-actions/artifact.zip
         token: ${{ secrets.GITHUB_TOKEN }}
 
     
