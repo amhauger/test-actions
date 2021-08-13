@@ -13,24 +13,22 @@ usage() { echo "Usage: $0 [-n <qa|prod> environment] [-m <string> commit message
 getVersions() {
     if [ -z "$LATEST_TAG"]; then
         echo "{ message: no previous version set; latest-tag: ${LATEST_TAG} }"
-        return 1
-    fi
+    else
+        IFS='.'
+        read -a strarr <<< "$LATEST_TAG"
+        MAJOR_VERSION=${strarr[0]}
+        MINOR_VERSION=${strarr[1]}
+        PATCH_VERSION=${strarr[2]}
 
-    IFS='.'
-    read -a strarr <<< "$LATEST_TAG"
-    MAJOR_VERSION=${strarr[0]}
-    MINOR_VERSION=${strarr[1]}
-    PATCH_VERSION=${strarr[2]}
-
-    if [ -z "$MAJOR_VERSION" ]; then
-        MAJOR_VERSION=0
-    fi
-    if [ -z "$MINOR_VERSION" ]; then
-        MINOR_VERSION=0
-    fi
-    if [ -z "$PATCH_VERSION" ]; then
-        PATCH_VERSION=0
-    fi
+        if [ -z "$MAJOR_VERSION" ]; then
+            MAJOR_VERSION=0
+        fi
+        if [ -z "$MINOR_VERSION" ]; then
+            MINOR_VERSION=0
+        fi
+        if [ -z "$PATCH_VERSION" ]; then
+            PATCH_VERSION=0
+        fi
 
     echo "{ message: got and parsed latest version; version-prefix: ${V_TYPE}; latest-version: ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION} }"
 }
