@@ -19,7 +19,8 @@ jobs:
 
     - name: Archive binaries
       id: archive-prod
-      run: zip artifact.zip ./qtroller
+      run: pwd
+      #run: zip -r artifact.zip ./qtroller
 
     - name: Run script
       id: version-script
