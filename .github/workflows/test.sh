@@ -3,14 +3,19 @@
 set -euo pipefail
 
 MAJOR_VERSION=3
-MINOR_VERSION=0
-PATCH_VERSION=0
+MINOR_VERSION=-1
+PATCH_VERSION=-1
 LATEST_TAG=-1
 V_TYPE="qa-"
 VERSION="qa-v0.0.0"
 
 usage() { echo "Usage: $0 [-n <qa|prod> environment] [-m <string> commit message]" 1>&2; exit 1;}
 getVersions() {
+    if [-z "$LATEST_TAG"]; then
+        echo "{ message: no previous version set; latest-tag: ${LATEST_TAG} }"
+        return 1
+    fi
+
     IFS='.'
     read -a strarr <<< "$LATEST_TAG"
     MAJOR_VERSION=${strarr[0]}
@@ -41,6 +46,14 @@ setVersion() {
         echo "{ message: updating minor version; commit-type: ${strarr[0]}; previous-minor-version: ${MINOR_VERSION} }"
         ((MINOR_VERSION++))
         echo "{ message: updated minor version; commit-type: ${strarr[0]}; previous-minor-version: ${MINOR_VERSION} }"
+    fi
+
+    if [ $MINOR_VERSION == -1 ]; then 
+        MINOR_VERSION=0
+    fi
+
+    if [ $PATCH_VERSION == -1 ]; then
+        PATCH_VERSION=0
     fi
 
     VERSION=$V_TYPE$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION
