@@ -2,13 +2,6 @@
 
 set -euo pipefail
 
-# MAJOR_VERSION=3
-# MINOR_VERSION=-1
-# PATCH_VERSION=-1
-# LATEST_TAG=-1
-V_TYPE="qa-"
-VERSION="qa-v0.0.0"
-
 usage() { echo "Usage: $0 [-n <qa|prod> environment] [-m <string> commit message]" 1>&2; exit 1;}
 
 getVersions() {
@@ -46,6 +39,7 @@ setVersion() {
     fi
 
     VERSION=v$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION
+    echo "::set-output name=new_tag::$VERSION"
 }
 
 while getopts "m:" flag
@@ -61,7 +55,6 @@ do
 
             getVersions $LATEST_TAG
             setVersion $m
-            echo "::set-output name=new_tag::$VERSION"
             ;;
         *)
             usage
