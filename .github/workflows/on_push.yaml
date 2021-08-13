@@ -31,7 +31,6 @@ jobs:
       id: autotagger
       if: steps.version-script.outputs.new_tag != ''
       run: |
-        echo ${{ steps.version-script.outputs.new_tag }}
         git tag -a ${{ steps.version-script.outputs.new_tag }} -m "${{ github.event.head_commit.message }}"
         git push origin ${{ steps.version-script.outputs.new_tag }}
 

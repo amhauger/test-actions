@@ -15,21 +15,16 @@ getVersions() {
     # Set default MAJOR, MINOR, and PATCH versions
     MAJOR_VERSION=3
 
-    if [ -z ${1} ]; then
-        MINOR_VERSION=-1
-        PATCH_VERSION=-1
-    else
-        IFS='.'
-        read -a strarr <<< "${1}"
-        MINOR_VERSION=${strarr[1]}
-        PATCH_VERSION=${strarr[2]}
+    IFS='.'
+    read -a strarr <<< "${1}"
+    MINOR_VERSION=${strarr[1]}
+    PATCH_VERSION=${strarr[2]}
 
-        if [ -z "$MINOR_VERSION" ]; then
-            MINOR_VERSION=0
-        fi
-        if [ -z "$PATCH_VERSION" ]; then
-            PATCH_VERSION=0
-        fi
+    if [ -z "$MINOR_VERSION" ]; then
+        MINOR_VERSION=0
+    fi
+    if [ -z "$PATCH_VERSION" ]; then
+        PATCH_VERSION=0
     fi
 }
 
