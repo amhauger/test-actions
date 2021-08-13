@@ -30,7 +30,8 @@ getVersions() {
             PATCH_VERSION=0
         fi
 
-    echo "{ message: got and parsed latest version; version-prefix: ${V_TYPE}; latest-version: ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION} }"
+        echo "{ message: got and parsed latest version; version-prefix: ${V_TYPE}; latest-version: ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION} }"
+    fi
 }
 
 setVersion() {
