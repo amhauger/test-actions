@@ -17,7 +17,7 @@ getVersions() {
     MINOR_VERSION=-1
     PATCH_VERSION=-1
 
-    if [ -z $1 ]; then
+    if [ -z ${1} ]; then
         MAJOR_VERSION=3
         MINOR_VERSION=-1
         PATCH_VERSION=-1
