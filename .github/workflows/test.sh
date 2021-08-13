@@ -26,15 +26,21 @@ getVersions() {
     if [ -z "$PATCH_VERSION" ]; then
         PATCH_VERSION=0
     fi
+
+    echo "{ message: got and parsed latest version; version-prefix: ${V_TYPE}; latest-version: ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION} }"
 }
 
 setVersion() {
     IFS=':'
-    read -a strarr <<< $1
+    read -a strarr <<< "$1"
     if [ ${strarr[0]} == "fix" ] || [ ${strarr[0]} == "chore" ]; then
-        PATCH_VERSION=${PATCH_VERSION+1}
+        echo "{ message: updating patch version; commit-type: ${strarr[0]}; previous-patch-version: ${PATCH_VERSION} }"
+        ((PATCH_VERSION++))
+        echo "{ message: updated patch version; commit-type: ${strarr[0]}; new-patch-version: ${PATCH_VERSION} }"
     else
-        MINOR_VERSION=${MINOR_VERSION+1}
+        echo "{ message: updating minor version; commit-type: ${strarr[0]}; previous-minor-version: ${MINOR_VERSION} }"
+        ((MINOR_VERSION++))
+        echo "{ message: updated minor version; commit-type: ${strarr[0]}; previous-minor-version: ${MINOR_VERSION} }"
     fi
 
     VERSION=$V_TYPE$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION
@@ -48,10 +54,12 @@ do
             if [ $n == "qa" ]; then
                 LATEST_TAG=$(git tag -l "qa-v*" | tail -1 | sed 's/qa-v//')
                 V_TYPE="qa-v"
+                echo "{ message: tagging for qa; latest-tag: ${LATEST_TAG}; version-prefix: ${V_TYPE} }"
                 getVersions
             elif [ $n == "prod" ]; then
                 LATEST_TAG=$(git tag -l "v*" | tail -1 | sed 's/v//')
                 V_TYPE="v"
+                echo "{ message: tagging for prod; latest-tag: ${LATEST_TAG}; version-prefix: ${V_TYPE} }"
                 getVersions
             else
                 usage
@@ -59,6 +67,7 @@ do
             ;;
         m)
             m=${OPTARG}
+            echo "{ message: setting version; commit-message: ${m}; latest-tag: ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION} }"
             setVersion $m
             git tag -a $VERSION -m "${m}"
             git push origin $VERSION
