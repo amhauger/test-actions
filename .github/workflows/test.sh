@@ -60,7 +60,7 @@ do
         m)
             m=${OPTARG}
             setVersion $m
-            git tag -a $VERSION -m $m
+            git tag -a $VERSION -m "${m}"
             git push origin $VERSION
             echo "::set-output name=new_tag::$VERSION"
             ;;
