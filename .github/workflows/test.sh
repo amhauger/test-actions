@@ -61,7 +61,7 @@ do
             LATEST_TAG=$(git tag -l "v*" | tail -1 | sed 's/v//')
 
             if [ -z $LATEST_TAG ]; then
-                LATEST_TAG = 3.-1.-1
+                LATEST_TAG"=3.-1.-1"
             fi
             getVersions $LATEST_TAG
             setVersion $m
