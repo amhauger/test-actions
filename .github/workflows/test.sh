@@ -12,6 +12,7 @@ VERSION="qa-v0.0.0"
 usage() { echo "Usage: $0 [-n <qa|prod> environment] [-m <string> commit message]" 1>&2; exit 1;}
 
 getVersions() {
+    echo $1
     if [ ! -z "${1}" ]; then
         IFS='.'
         read -a strarr <<< "${1}"
