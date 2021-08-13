@@ -14,23 +14,16 @@ usage() { echo "Usage: $0 [-n <qa|prod> environment] [-m <string> commit message
 getVersions() {
     # Set default MAJOR, MINOR, and PATCH versions
     MAJOR_VERSION=3
-    MINOR_VERSION=-1
-    PATCH_VERSION=-1
 
     if [ -z ${1} ]; then
-        MAJOR_VERSION=3
         MINOR_VERSION=-1
         PATCH_VERSION=-1
     else
         IFS='.'
         read -a strarr <<< "${1}"
-        MAJOR_VERSION=3
         MINOR_VERSION=${strarr[1]}
         PATCH_VERSION=${strarr[2]}
 
-        if [ -z "$MAJOR_VERSION" ]; then
-            MAJOR_VERSION=3
-        fi
         if [ -z "$MINOR_VERSION" ]; then
             MINOR_VERSION=0
         fi
@@ -67,6 +60,9 @@ do
             m=${OPTARG}
             LATEST_TAG=$(git tag -l "v*" | tail -1 | sed 's/v//')
 
+            if [ -z $LATEST_TAG ]; then
+                LATEST_TAG = 3.-1.-1
+            fi
             getVersions $LATEST_TAG
             setVersion $m
             echo "::set-output name=new_tag::$VERSION"
