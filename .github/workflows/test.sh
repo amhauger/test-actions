@@ -11,7 +11,7 @@ VERSION="qa-v0.0.0"
 
 usage() { echo "Usage: $0 [-n <qa|prod> environment] [-m <string> commit message]" 1>&2; exit 1;}
 getVersions() {
-    if [-z "$LATEST_TAG"]; then
+    if [ -z "$LATEST_TAG"]; then
         echo "{ message: no previous version set; latest-tag: ${LATEST_TAG} }"
         return 1
     fi
