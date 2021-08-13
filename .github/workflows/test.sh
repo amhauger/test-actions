@@ -62,6 +62,7 @@ do
         m)
             m=${OPTARG}
             LATEST_TAG=$(git tag -l "v*" | tail -1 | sed 's/v//')
+            echo $LATEST_TAG
             getVersions $LATEST_TAG
             setVersion $m
             echo "::set-output name=new_tag::$VERSION"
