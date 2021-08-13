@@ -22,7 +22,7 @@ jobs:
       run: zip -r artifact.zip /home/runner/work/test-actions
 
     - name: Git tag list
-      run: git tag -l
+      run: echo ${{ git tag -l }}
 
     - name: Run script
       id: version-script
