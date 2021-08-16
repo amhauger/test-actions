@@ -12,14 +12,6 @@ jobs:
 
     - name: Install required packages
       run: go get -u ./...
-      
-    - name: Build binaries for archive
-      id: build-prod
-      run: go build
-
-    - name: Archive binaries
-      id: archive-prod
-      run: zip -r artifact.zip /home/runner/work/test-actions
 
     - name: Bump and tag
       id: tag_version
@@ -34,7 +26,6 @@ jobs:
       with:
         tag: ${{ steps.tag_version.outputs.new_tag }}
         body: ${{ steps.tag_version.outputs.changelog }}
-        artifacts: /home/run/work/test-actions/artifact.zip
         token: ${{ secrets.GITHUB_TOKEN }}
 
     
