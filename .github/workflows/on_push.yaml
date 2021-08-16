@@ -26,13 +26,13 @@ jobs:
       run: |
         git fetch --all --tags
         LATEST_TAG=$(git tag -l 'v*' | tail -1 | sed 's/v//')
-        # if [ -z $LATEST_TAG ]; then
-        #   LATEST_TAG="3.-1.-1"
-        # fi
-        # IFS='.'
-        # read -a strarr <<< "$LATEST_TAG"
-        # MINOR_VERSION=${strarr[1]}
-        # PATCH_VERSION=${strarr[2]}
+        if [ -z $LATEST_TAG ]; then
+          LATEST_TAG="3.-1.-1"
+        fi
+        IFS='.'
+        read -a strarr <<< "$LATEST_TAG"
+        MINOR_VERSION=${strarr[1]}
+        PATCH_VERSION=${strarr[2]}
         # if [ -z "$MINOR_VERSION" ]; then
         #   MINOR_VERSION=0
         # fi
