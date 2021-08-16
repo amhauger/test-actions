@@ -41,18 +41,18 @@ jobs:
         fi
         IFS=':'
         read -a strarr <<< "${{ github.event.head_commit.message }}"
-        # if [ ${strarr[0]} == "fix" ] || [ ${strarr[0]} == "chore" ]; then
-        #   ((PATCH_VERSION++))
-        # else
-        #   ((MINOR_VERSION++))
-        # fi
-        # if [ $MINOR_VERSION == -1 ]; then
-        #   MINOR_VERSION=0
-        # fi
-        # if [ $PATCH_VERSION == -1 ]; then
-        #   PATCH_VERSION=0
-        # fi
-        # echo "::set-output name=new_tag::v3.$MINOR_VERSION.$PATCHVERSION" 
+        if [ ${strarr[0]} == "fix" ] || [ ${strarr[0]} == "chore" ]; then
+          ((PATCH_VERSION++))
+        else
+          ((MINOR_VERSION++))
+        fi
+        if [ $MINOR_VERSION == -1 ]; then
+          MINOR_VERSION=0
+        fi
+        if [ $PATCH_VERSION == -1 ]; then
+          PATCH_VERSION=0
+        fi
+        echo "::set-output name=new_tag::v3.$MINOR_VERSION.$PATCHVERSION" 
 
     - name: Tag
       id: autotagger
