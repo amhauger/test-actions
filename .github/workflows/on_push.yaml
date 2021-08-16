@@ -52,7 +52,7 @@ jobs:
         if [ $PATCH_VERSION == -1 ]; then
           PATCH_VERSION=0
         fi
-        echo "::set-output name=new_tag::v3.$MINOR_VERSION.$PATCHVERSION" 
+        echo "::set-output name=new_tag::v3.$MINOR_VERSION.$PATCH_VERSION" 
 
     - name: Tag
       id: autotagger
