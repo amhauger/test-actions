@@ -40,7 +40,7 @@ jobs:
           PATCH_VERSION=0
         fi
         IFS=':'
-        # read -a strarr <<< ${{ github.event.head_commit.message }}
+        read -a strarr <<< "${{ github.event.head_commit.message }}"
         # if [ ${strarr[0]} == "fix" ] || [ ${strarr[0]} == "chore" ]; then
         #   ((PATCH_VERSION++))
         # else
