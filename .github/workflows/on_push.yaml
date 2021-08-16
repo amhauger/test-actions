@@ -21,52 +21,20 @@ jobs:
       id: archive-prod
       run: zip -r artifact.zip /home/runner/work/test-actions
 
-    - name: Run script
-      id: version-script
-      run: |
-        git fetch --all --tags
-        LATEST_TAG=$(git tag -l 'v*' | tail -1 | sed 's/v//')
-        if [ -z $LATEST_TAG ]; then
-          LATEST_TAG="3.-1.-1"
-        fi
-        IFS='.'
-        read -a strarr <<< "$LATEST_TAG"
-        MINOR_VERSION=${strarr[1]}
-        PATCH_VERSION=${strarr[2]}
-        if [ -z "$MINOR_VERSION" ]; then
-          MINOR_VERSION=0
-        fi
-        if [ -z "$PATCH_VERSION" ]; then
-          PATCH_VERSION=0
-        fi
-        IFS=':'
-        read -a strarr <<< "${{ github.event.head_commit.message }}"
-        if [ ${strarr[0]} == "fix" ] || [ ${strarr[0]} == "chore" ]; then
-          ((PATCH_VERSION++))
-        else
-          ((MINOR_VERSION++))
-        fi
-        if [ $MINOR_VERSION == -1 ]; then
-          MINOR_VERSION=0
-        fi
-        if [ $PATCH_VERSION == -1 ]; then
-          PATCH_VERSION=0
-        fi
-        echo "::set-output name=new_tag::v3.$MINOR_VERSION.$PATCH_VERSION" 
-
-    - name: Tag
-      id: autotagger
-      if: steps.version-script.outputs.new_tag != ''
-      run: |
-        git tag -a ${{ steps.version-script.outputs.new_tag }} -m "${{ github.event.head_commit.message }}"
-        git push origin ${{ steps.version-script.outputs.new_tag }}
+    - name: Bump and tag
+      id: tag_version
+      uses: mathiedutour/github-tag-action@v5.6
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Release
       id: create-release
       if: steps.autotagger.outputs.tagname != ''
       uses: ncipollo/release-action@v1
       with:
-        artifacts: /home/runn/work/test-actions/artifact.zip
+        tag: ${{ steps.tag_version.outputs.new_tag }}
+        body: ${{ steps.tag_version.outputs.changelog }}
+        artifacts: /home/run/work/test-actions/artifact.zip
         token: ${{ secrets.GITHUB_TOKEN }}
 
     
