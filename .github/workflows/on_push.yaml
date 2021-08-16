@@ -23,13 +23,13 @@ jobs:
 
     - name: Bump and tag
       id: tag_version
-      uses: mathiedutour/github-tag-action@v5.6
+      uses: mathieudutour/github-tag-action@v5.6
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Release
       id: create-release
-      if: steps.autotagger.outputs.tagname != ''
+      if: steps.tag_version.outputs.new_tag != ''
       uses: ncipollo/release-action@v1
       with:
         tag: ${{ steps.tag_version.outputs.new_tag }}
