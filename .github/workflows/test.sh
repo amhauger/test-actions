@@ -1,5 +1,4 @@
 #!/bin/bash
-# gg
 
 set -euo pipefail
 
