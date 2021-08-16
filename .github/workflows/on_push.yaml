@@ -39,13 +39,13 @@ jobs:
         if [ -z "$PATCH_VERSION" ]; then
           PATCH_VERSION=0
         fi
-        IFS=':'
-        read -a strarr <<< ${{ github.event.head_commit.message }}
-        if [ ${strarr[0]} == "fix" ] || [ ${strarr[0]} == "chore" ]; then
-          ((PATCH_VERSION++))
-        else
-          ((MINOR_VERSION++))
-        fi
+        # IFS=':'
+        # read -a strarr <<< ${{ github.event.head_commit.message }}
+        # if [ ${strarr[0]} == "fix" ] || [ ${strarr[0]} == "chore" ]; then
+        #   ((PATCH_VERSION++))
+        # else
+        #   ((MINOR_VERSION++))
+        # fi
         # if [ $MINOR_VERSION == -1 ]; then
         #   MINOR_VERSION=0
         # fi
