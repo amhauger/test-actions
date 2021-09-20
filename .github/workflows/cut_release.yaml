@@ -17,6 +17,12 @@ jobs:
       - name: install required packages
         run: go get -u ./...
 
+      - name: create changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v2.4.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Bump and tag
         id: tag_version
         uses: paulhatch/semantic-version@v4.0.2
@@ -34,5 +40,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.tag_version.outputs.version_tag }}
-          # Need to gather changelog
+          body: ${{ steps.changelog.outputs.changelog }}
           token: ${{ secrets.GITHUB_TOKEN }}
