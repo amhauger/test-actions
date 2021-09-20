@@ -1,0 +1,38 @@
+name: release on branch merge
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: install required packages
+        run: go get -u ./...
+
+      - name: Bump and tag
+        id: tag_version
+        uses: paulhatch/semantic-version@v4.0.2
+        with:
+          tag_prefix: "v"
+          major_pattern: "(MAJOR)"
+          minor_pattern: "feat"
+          format: "${major}.${minor}.${patch}"
+          short_tags: false
+          bump_each_commit: false
+
+      - name: release
+        id: create-release
+        if: steps.tag_version.outputs.version_tag != ''
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.version_tag }}
+          # Need to gather changelog
+          token: ${{ secrets.GITHUB_TOKEN }}
