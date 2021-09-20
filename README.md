@@ -1,5 +1,3 @@
 # test-actions
 
-Update the readme
-Update the readme again
-Update the readme a third time
+Update the readme to not say extra things
