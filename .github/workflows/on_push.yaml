@@ -7,8 +7,6 @@ on:
 jobs:
   create-tag:
     runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.tag_version.outputs.version_tag}}
     steps:
       - name: Check Out Repo and Tag History
         uses: actions/checkout@v2
@@ -29,10 +27,7 @@ jobs:
           short_tags: false
           bump_each_commit: false
 
-  build-services:
-    runs-on: ubuntu-latest
-    steps:
       - name: See Version
-        run: echo ${{ need.create-tag.outputs.tag }}
+        run: echo ${{ steps.create-tag.outputs.tag }}
 
     
