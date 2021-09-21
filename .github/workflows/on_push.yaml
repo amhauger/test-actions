@@ -28,6 +28,6 @@ jobs:
           bump_each_commit: false
 
       - name: See Version
-        run: echo ${{ create-tag.outputs.tag }}
+        run: echo ${{ steps.create-tag.outputs.tag }}
 
     
