@@ -1,9 +1,9 @@
 name: release on branch merge
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 jobs:
   create-tag:

@@ -1,31 +1,38 @@
 name: tag on branch push
 
 on:
-  push:
-    branches-ignore:
-      - main
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
   create-tag:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag_version.outputs.version_tag}}
     steps:
-    - name: Check out the repo at latest
-      uses: actions/checkout@v2
-      with:
+      - name: Check Out Repo and Tag History
+        uses: actions/checkout@v2
+        with:
           fetch-depth: 0
+      
+      - name: Install Required Packages
+        run: go get -u ./...
 
-    - name: Install required packages
-      run: go get -u ./...
+      - name: Bump and Tag Prerelease Versions
+        id: tag_version
+        uses: paulhatch/semantic-version@v4.0.2
+        with:
+          tag_prefix: "v"
+          major_pattern: "(MAJOR)"
+          minor_pattern: "feat"
+          format: "${major}.${minor}.${patch}-prerelease${increment}"
+          short_tags: false
+          bump_each_commit: false
 
-    - name: Bump and tag
-      id: tag_version
-      uses: paulhatch/semantic-version@v4.0.2
-      with:
-        tag_prefix: "v"
-        major_pattern: "(MAJOR)"
-        minor_pattern: "feat"
-        format: "${major}.${minor}.${patch}-prerelease${increment}"
-        short_tags: false
-        bump_each_commit: false
+  build-services:
+    runs-on: ubuntu-latest
+    steps:
+      - name: See Version
+        run: echo ${{ create-tag.outputs.tag }}
 
     
