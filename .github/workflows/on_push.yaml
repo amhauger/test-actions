@@ -29,7 +29,11 @@ jobs:
 
       - name: reserve tag
         id: reserve_tag
-        run: git tag ${{ steps.tag_version.outputs.version }}
+        run: git tag ${{ steps.tag_version.outputs.version_tag }}
+
+      - name: try it again
+        id: try_again
+        run: git tag ${{ steps.tag_version.outputs.version_tag }}
 
       - name: See Error
         if: ${{ failure() }}
