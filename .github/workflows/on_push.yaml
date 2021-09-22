@@ -7,8 +7,6 @@ on:
 jobs:
   create-tag:
     runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.tag_version.outputs.version_tag}}
     steps:
       - name: Check Out Repo and Tag History
         uses: actions/checkout@v2
@@ -36,6 +34,4 @@ jobs:
           echo '::set-output name=reserve_error::$($?)'
 
       - name: See Error
-        run: echo ${{ steps.reserve_tag.output.reserve_error }}
-
-    
+        run: echo ${{ steps.reserve_tag.output.reserve_error }}   
