@@ -29,10 +29,12 @@ jobs:
           short_tags: false
           bump_each_commit: false
 
-  build-services:
-    runs-on: ubuntu-latest
-    steps:
-      - name: See Version
-        run: echo ${{ create-tag.outputs.tag }}
+      - name: reserve tag
+        id: reserve_tag
+        run: |
+          git tag ${{ steps.tag_version.output.version_tag }}
+          echo '::set-output name=reserve_error::$($?)'
+      - name: See Error
+        run: echo ${{ steps.reserve_tag.output.reserve_error }}
 
     
