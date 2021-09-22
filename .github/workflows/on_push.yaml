@@ -37,4 +37,7 @@ jobs:
 
       - name: See Error
         if: ${{ failure() }}
-        run: echo ${{ steps.tag_version.outputs.version }}   
+        uses: thollander/actions-comment-pull-request@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          message: "Tag ${{ steps.tag_version.outputs.version_tag }} is in use by a different branch. Make another commit to bump the version (may I suggest writing a test?)." 
