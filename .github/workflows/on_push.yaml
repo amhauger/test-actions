@@ -29,9 +29,8 @@ jobs:
 
       - name: reserve tag
         id: reserve_tag
-        run: |
-          echo ${{ steps.tag_version.output.version }}
-          echo '::set-output name=reserve_error::$($?)'
+        run: git tag ${{ steps.tag_version.outputs.version }}
 
       - name: See Error
-        run: echo ${{ steps.tag_version.output.version }}   
+        if: ${{ failure() }}
+        run: echo ${{ steps.tag_version.outputs.version }}   
