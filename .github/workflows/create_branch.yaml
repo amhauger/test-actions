@@ -17,8 +17,8 @@ jobs:
 
       - name: Show branch name
         run: |
-          echo ${ steps.extract_branch.outputs.name }
-          
+          echo ${{ steps.extract_branch.outputs.name }}
+
       - name: Create release branch
         uses: peterjgrainger/action-create-branch@v2.0.1
         env:
