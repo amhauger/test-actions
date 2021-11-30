@@ -9,11 +9,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Generate_latest_tag
+      - name: Extract branch name
+        shell: bash
+        id: extract_branch
         run: |
-          S="$(git branch --show-current | cut -d '.' -f2)"
-          echo "$S"
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
 
+      - name: Show branch name
+        run: |
+          echo ${ steps.extract_branch.outputs.name }
+          
       - name: Create release branch
         uses: peterjgrainger/action-create-branch@v2.0.1
         env:
