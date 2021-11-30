@@ -19,4 +19,8 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-go-
 
-      - uses: peter-evans/create-pull-request@v3
+      - uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_PREFIX: "release/"
+          PULL_REQUEST_BRANCH: "main"
