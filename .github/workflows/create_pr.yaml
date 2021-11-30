@@ -12,12 +12,12 @@ jobs:
         with:
           go-version: 1.16
 
-      - uses: actions/cache@v2
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: ~/go/pkg/mod
+      #     key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-go-
 
       - uses: peter-evans/create-pull-request@v3
         with:
