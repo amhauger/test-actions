@@ -13,7 +13,7 @@ jobs:
         shell: bash
         id: extract_branch
         run: |
-          echo "::set-output name=patch_version::$(git describe --tags | cut -d'.' -f2)"
+          echo "::set-output name=patch_version::$(GITHUB_REF#refs/*/ | cut -d'.' -f2)"
 
       - name: Show branch name
         run: |
