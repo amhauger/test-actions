@@ -13,8 +13,7 @@ jobs:
         shell: bash
         id: extract_branch
         run: |
-          echo "GIT_TAG=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
-          echo "::set-output name=patch_version::${GITHUB_REF/refs\/tags\//}"
+          echo "::set-output name=patch_version::$(git for-each-ref --count=30 --sort=-commiterdate $GITHUB_REF/refs/heads/release/ --format='%(refname:short'))"
 
       - name: Show branch name
         run: |
