@@ -9,6 +9,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check Out Repo and Tag History
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: blah
+        id: check
+        run: |
+          git fetch --tags
+          echo ::set-output name=tags::$(git tag --describe)
+
+      - name: check blah
+        id: check-blah
+        run: |
+          echo ${{ steps.check.outputs.tags }}
       - name: Extract branch name
         shell: bash
         id: extract_branch
