@@ -13,12 +13,15 @@ jobs:
         shell: bash
         id: extract_branch
         run: |
-          echo "::set-output name=patch_version::$(git for-each-ref --count=30 --sort=-commiterdate $GITHUB_REF/refs/heads/release/ --format='%(refname:short)')"
+          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
 
       - name: Show branch name
         run: |
-          echo ${{ env.GIT_TAG }}
-          echo "${{ steps.extract_branch.outputs.patch_version }}"
+          echo "${{ steps.extract_branch.outputs.SOURCE_NAME }}"
+          echo "${{ steps.extract_branch.outputs.SOURCE_BRANCH }}"
+          echo "${{ steps.extract_branch.outputs.SOURCE_TAG }}"
 
       - name: Create release branch
         uses: peterjgrainger/action-create-branch@v2.0.1
