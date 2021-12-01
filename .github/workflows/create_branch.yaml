@@ -10,18 +10,19 @@ jobs:
 
     steps:
       - name: Extract branch name
-        shell: bash
-        id: extract_branch
+        # shell: bash
+        # id: extract_branch
         run: |
-          echo "::set-output name=patch_version::$(GITHUB_REF#refs/*/ | cut -d'.' -f2)"
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Show branch name
         run: |
-          echo "${{ steps.extract_branch.outputs.patch_version }}"
+          echo $RELEASE_VERSION
+          echo "${{ env.RELEASE_VERSION }}"
 
-      - name: Create release branch
-        uses: peterjgrainger/action-create-branch@v2.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          branch: 'release/${{ steps.extract_branch.outputs.patch_version }}'
+      # - name: Create release branch
+      #   uses: peterjgrainger/action-create-branch@v2.0.1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     branch: 'release/${{ steps.extract_branch.outputs.patch_version }}'
