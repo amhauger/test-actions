@@ -13,7 +13,6 @@ jobs:
         shell: bash
         id: extract_branch
         run: |
-          git fetch --tags
           echo "::set-output name=patch_version::$(echo $GITHUB_REF | cut -d / -f 3)"
 
       - name: Show branch name
