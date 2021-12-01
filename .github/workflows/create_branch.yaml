@@ -13,7 +13,7 @@ jobs:
         shell: bash
         id: extract_branch
         run: |
-          echo "::set-output name=patch_version::$(git for-each-ref --count=30 --sort=-commiterdate $GITHUB_REF/refs/heads/release/ --format='%(refname:short'))"
+          echo "::set-output name=patch_version::$(git for-each-ref --count=30 --sort=-commiterdate $GITHUB_REF/refs/heads/release/ --format='%(refname:short)')"
 
       - name: Show branch name
         run: |
