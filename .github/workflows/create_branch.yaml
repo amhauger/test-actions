@@ -18,7 +18,7 @@ jobs:
         id: check
         run: |
           git fetch --tags
-          echo ::set-output name=tags::$(git tag --sort=-v:refname | head -n 1)
+          echo ::set-output name=tags::$(git tag --sort=-v:refname | head -n 1 | cut -d "." -f 2)
 
       - name: check blah
         id: check-blah
