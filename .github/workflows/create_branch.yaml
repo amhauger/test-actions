@@ -18,7 +18,7 @@ jobs:
         id: check
         run: |
           git fetch --tags
-          echo ::set-output name=tags::$(git tag --describe)
+          echo ::set-output name=tags::$(git tag --list)
 
       - name: check blah
         id: check-blah
