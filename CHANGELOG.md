@@ -30,5 +30,6 @@ f2064f0
 chore: updated readme
 * Merge pull request #2 from amhauger/feat/branch_1
 efced28
-feat: print silly hello world## A HERP A DERP
+feat: print silly hello world
+## A HERP A DERP
 ### DERP ALERP\n
