@@ -53,7 +53,10 @@ jobs:
           git log ${{ needs.gather-latest-tag.outputs.last-tag }} --merges --pretty=format:"* %s%n%h%n%b" >> CHANGELOG.md
           cat CHANGELOG.md.temp | sed 's/# Changes Release To Production//g'>> CHANGELOG.md
           rm CHANGELOG.md.temp
-          cat CHANGELOG.md
+          git config --global user.name "Quackals"
+          git config --global user.email "nobody@qqcw.us"
+          git commit -am "Automated Changelog"
+          git push
 
   create-release-branch:
     runs-on: ubuntu-latest
