@@ -26,7 +26,8 @@ jobs:
         id: last-tag
         run: |
           LAST_TAG=$(git describe --abbrev=0 --tags)
-          echo ::set-output name=tag::$LAST_TAG
+          echo $LAST_TAG
+          echo ::set-output name=tag::$(echo $LAST_TAG)
 
   generate-changelog:
     runs-on: ubuntu-latest
