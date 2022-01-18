@@ -1,0 +1,88 @@
+name: Create QA Release and Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      next-release:
+        description: "next tag to generate (of form X.YY.ZZZ)"
+        required: true
+
+jobs:
+  gather-latest-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      last-tag: steps.last-tag.outputs.tag
+    env:
+      SSH_KEY: ${{ secrets.SEGMENT_TYPES_SSH_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Check Out Repo and Tag History
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get Last Tag
+        id: last-tag
+        run: |
+          LAST_TAG=$(git describe --abbrev=0 --tags)
+          echo ::set-output name=tag::$LAST_TAG
+
+  generate-changelog:
+    runs-on: ubuntu-latest
+    needs: [gather-latest-tag]
+    env:
+      SSH_KEY: ${{ secrets.SEGMENT_TYPES_SSH_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Check Out Repo and Tag History
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # NOTE: for git log formatting %s=commit title, %h=shortened commit hash, %b=commit body, %n=new line
+      - name: Generate Changelog
+        id: generate-changelog
+        run: |
+          mv CHANGELOG.md CHANGELOG.md.temp
+          echo "# Changes Released To Production" > CHANGELOG.md
+          echo "---------------------------------" >> CHANGELOG.md
+          echo "## Release ${{ github.event.inputs.next-release }}\n" >> CHANGELOG.md
+          git log ${{ needs.gather-latest-tag.outputs.last-tag }} --merges --pretty=format:"* %s%n%h%n%b" >> CHANGELOG.md
+          cat CHANGELOG.md.temp | sed 's/# Changes Release To Production//g'>> CHANGELOG.md
+          rm CHANGELOG.md.temp
+
+  create-release-branch:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Check Out Repo and Tag History
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Open `release/v${{ github.event.inputs.next-release }}` Branch
+        id: open-release-branch
+        uses: peterjgrainger/action-create-branch@v2.0.1
+        with:
+          branch: v${{ github.event.inputs.next-release }}
+
+  create-release-tag:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check Out Repo and Tag History
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Create Release Tag and Object
+        uses: ncipollo/release-action@v1
+        with: 
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "release-${{ github.event.inputs.next-release }}+0.tar.gz"
+          commit: main
+          tag: v${{ github.event.inputs.next-release }}+0
