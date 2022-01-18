@@ -11,7 +11,7 @@ jobs:
   gather-latest-tag:
     runs-on: ubuntu-latest
     outputs:
-      last-tag: steps.last-tag.outputs.tag
+      last-tag: ${{ steps.last-tag.outputs.tag }}
     env:
       SSH_KEY: ${{ secrets.SEGMENT_TYPES_SSH_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
