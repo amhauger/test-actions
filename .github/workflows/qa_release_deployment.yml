@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [gather-latest-tag]
     outputs:
-      changes: ${{ steps.changes.outputs.changes }}
+      changes: ${{ steps.get-changes.outputs.changes }}
     env:
       SSH_KEY: ${{ secrets.SEGMENT_TYPES_SSH_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,10 +46,10 @@ jobs:
 
       # NOTE: for git log formatting %s=commit title, %h=shortened commit hash, %b=commit body, %n=new line
       - name: Get Changes
-        id: changes
+        id: get-changes
         run: |
           echo ::set-output name=changes::$(git log ${{ needs.gather-latest-tag.outputs.last-tag }}..HEAD --merges --pretty=format:"* ### %s%n  * hash: %h%n  * %b%n")
-
+      
       - name: Generate Changelog
         id: generate-changelog
         run: |
@@ -57,7 +57,7 @@ jobs:
           echo "# Changes Released To Production" > CHANGELOG.md
           echo "---------------------------------" >> CHANGELOG.md
           echo "## Release ${{ github.event.inputs.next-release }}" >> CHANGELOG.md
-          ${{ steps.changes.outputs.changes }} >> CHANGELOG.md
+          echo ${{ steps.get-changes.outputs.changes }} >> CHANGELOG.md
           cat CHANGELOG.md.temp | sed 's/\# Changes Release To Production//g'>> CHANGELOG.md
           rm CHANGELOG.md.temp
           git config --global user.name "Quackals"
