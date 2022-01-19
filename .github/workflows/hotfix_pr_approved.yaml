@@ -1,0 +1,66 @@
+name: Merge `hotfix` Branches
+
+on:
+  push:
+    branches:
+      - 'release/*'
+
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: steps.get-branch-name.outputs.version
+
+    steps:
+      - name: Check Out Repo and Tag History
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get Branch Name (contains release version)
+        id: get-branch-name
+        run: echo ::set-output name=version::$(echo ${GITHUB_REF#refs/heads/release/})
+
+  create-new-releases:
+    runs-on: ubuntu-latest
+    needs: [get-version]
+    outputs:
+      new-version: steps.increment-version.outputs.next-version
+    env:
+      GO111MODULE: on
+      GOPRIVATE: github.com/qqcw
+      SSH_KEY: ${{ secrets.SEGMENT_TYPES_SSH_KEY }}
+
+    steps:
+      - name: Check Out Repo and Tag History
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - id: version-tags
+        run: |
+          LAST_TAG_FOR_BRANCH=$(git tag --list "${{ needs.get-version.outputs.version }}+" | head -n 1 | cut -d "+" -f2)
+          VERSION=$(git tag --list "${{ needs.get-version.outputs.version }}+" | head -n 1 | cut -d "+" -f1)
+          echo ::set-output name=old-incrementer::$(( LAST_TAG_FOR_BRANCH ))
+          echo ::set-output name=new-incrementer::$(( LAST_TAG_FOR_BRANCH+1 ))
+          echo ::set-output name=version::$(( VERSION ))
+
+      - id: increment-version
+        run: |
+          echo ::set-output name=next-version::"${{ steps.version-tags.outputs.version }}+${{ steps.version-tags.outputs.new-incrementer }}"
+
+      - id: changes
+        run: |
+          git log ${{ steps.version-tags.outputs.version }}+${{ steps.version-tags.outputs.old-incrementer }}..HEAD --merges --pretty=format:"# %s%n## hash %h%n## %b%n" > body.md
+
+      - name: Create New Release Tag and Object
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "release-${{ steps.increment-version.outputs.next-version }}.tar.gz"
+          bodyFile: body.md
+          commit: ${{ needs.get-version.outputs.version }}
+          tag: ${{ steps.increment-version.outputs.next-version }}
+
+      - run: |
+          rm body.md

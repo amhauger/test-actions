@@ -85,7 +85,7 @@ jobs:
           fetch-depth: 0
 
       - run: |
-          git log ${{ needs.gather-latest-tag.outputs.last-tag }}..HEAD --merges --pretty=format:"#%s%n## hash %h%n## %b%n" > body.md
+          git log ${{ needs.gather-latest-tag.outputs.last-tag }}..HEAD --merges --pretty=format:"# %s%n## hash %h%n## %b%n" > body.md
 
       - name: Create Release Tag and Object
         uses: ncipollo/release-action@v1
