@@ -42,29 +42,29 @@ jobs:
       - id: version-tags
         run: |
           git tag --list "${{ needs.get-version.outputs.version }}+"
-          LAST_TAG_FOR_BRANCH=$(git tag --list "${{ needs.get-version.outputs.version }}+" | head -n 1 | cut -d "+" -f2)
-          echo $((LAST_TAG_FOR_BRANCH))
-          VERSION=$(git tag --list "${{ needs.get-version.outputs.version }}+" | head -n 1 | cut -d "+" -f1)
-          echo ::set-output name=old-incrementer::$(( LAST_TAG_FOR_BRANCH ))
-          echo ::set-output name=new-incrementer::$(( LAST_TAG_FOR_BRANCH+1 ))
-          echo ::set-output name=version::$(( VERSION ))
+      #     LAST_TAG_FOR_BRANCH=$(git tag --list "${{ needs.get-version.outputs.version }}+" | head -n 1 | cut -d "+" -f2)
+      #     echo $((LAST_TAG_FOR_BRANCH))
+      #     VERSION=$(git tag --list "${{ needs.get-version.outputs.version }}+" | head -n 1 | cut -d "+" -f1)
+      #     echo ::set-output name=old-incrementer::$(( LAST_TAG_FOR_BRANCH ))
+      #     echo ::set-output name=new-incrementer::$(( LAST_TAG_FOR_BRANCH+1 ))
+      #     echo ::set-output name=version::$(( VERSION ))
 
-      - id: increment-version
-        run: |
-          echo ::set-output name=next-version::"${{ steps.version-tags.outputs.version }}+${{ steps.version-tags.outputs.new-incrementer }}"
+      # - id: increment-version
+      #   run: |
+      #     echo ::set-output name=next-version::"${{ steps.version-tags.outputs.version }}+${{ steps.version-tags.outputs.new-incrementer }}"
 
-      - id: changes
-        run: |
-          git log ${{ steps.version-tags.outputs.version }}+${{ steps.version-tags.outputs.old-incrementer }}..HEAD --merges --pretty=format:"# %s%n## hash %h%n## %b%n" > body.md
+      # - id: changes
+      #   run: |
+      #     git log ${{ steps.version-tags.outputs.version }}+${{ steps.version-tags.outputs.old-incrementer }}..HEAD --merges --pretty=format:"# %s%n## hash %h%n## %b%n" > body.md
 
-      - name: Create New Release Tag and Object
-        uses: ncipollo/release-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "release-${{ steps.increment-version.outputs.next-version }}.tar.gz"
-          bodyFile: body.md
-          commit: ${{ needs.get-version.outputs.version }}
-          tag: ${{ steps.increment-version.outputs.next-version }}
+      # - name: Create New Release Tag and Object
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     artifacts: "release-${{ steps.increment-version.outputs.next-version }}.tar.gz"
+      #     bodyFile: body.md
+      #     commit: ${{ needs.get-version.outputs.version }}
+      #     tag: ${{ steps.increment-version.outputs.next-version }}
 
-      - run: |
-          rm body.md
+      # - run: |
+      #     rm body.md
