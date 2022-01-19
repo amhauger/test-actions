@@ -84,11 +84,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - run: |
+          git log ${{ needs.gather-latest-tag.outputs.last-tag }}..HEAD --merges --pretty=format:"#%s%n## hash %h%n## %b%n" > body.md
+
       - name: Create Release Tag and Object
         uses: ncipollo/release-action@v1
         with: 
           token: ${{ secrets.GITHUB_TOKEN }}
-          body: git log ${{ needs.gather-latest-tag.outputs.last-tag }}..HEAD --merges --pretty=format:"#%s%n## hash %h%n## %b%n"
+          bodyFile: body.md 
           artifacts: "release-${{ github.event.inputs.next-release }}+0.tar.gz"
           commit: main
           tag: v${{ github.event.inputs.next-release }}+0
+
+      - run: |
+          rm body.md
