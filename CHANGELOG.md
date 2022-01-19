@@ -1,5 +1,11 @@
 # Changes Released To Production
 ---------------------------------
+## Release 4.2.0
+* ### Merge pull request #21 from amhauger/test/get-changes-in-step-each-time
+  * hash: ff9c4d8
+  * test: get the changes each time we need those logs
+
+---------------------------------
 ## Release 4.1.15
 * ### Merge pull request #20 from amhauger/test/echo-needs-quotes CHANGELOG.md README.md config.example.json go.mod go.sum main.go test-actions hash: c3b3c7d CHANGELOG.md README.md config.example.json go.mod go.sum main.go test-actions test: does echo need quotes?
 
