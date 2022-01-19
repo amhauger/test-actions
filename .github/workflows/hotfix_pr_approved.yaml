@@ -20,7 +20,7 @@ jobs:
       - name: Get Branch Name (contains release version)
         id: get-branch-name
         run: |
-          git branch --show-current
+          git branch --show-current | cut -d "/" -f2
           echo ::set-output name=version::$(git branch --show-current | cut -d "/" -f2)
 
   create-new-releases:
