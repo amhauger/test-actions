@@ -21,7 +21,7 @@ jobs:
         id: get-branch-name
         run: |
           echo ${GITHUB_REF#refs/heads/release/}
-          echo ::set-output name=version::${{ GITHUB_REF#refs/heads/release/ }}
+          echo ::set-output name=version::$(echo ${{ GITHUB_REF#refs/heads/release/ }})
 
   create-new-releases:
     runs-on: ubuntu-latest
