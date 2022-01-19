@@ -49,9 +49,9 @@ jobs:
           mv CHANGELOG.md CHANGELOG.md.temp
           echo "# Changes Released To Production" > CHANGELOG.md
           echo "---------------------------------" >> CHANGELOG.md
-          echo "## Release ${{ github.event.inputs.next-release }}\n" >> CHANGELOG.md
+          echo "## Release ${{ github.event.inputs.next-release }}" >> CHANGELOG.md
           git log ${{ needs.gather-latest-tag.outputs.last-tag }}..HEAD --merges --pretty=format:"* ### %s%n  * hash: %h%n  * %b%n" >> CHANGELOG.md
-          cat CHANGELOG.md.temp | sed 's/# Changes Release To Production//g'>> CHANGELOG.md
+          cat CHANGELOG.md.temp | sed 's/\# Changes Release To Production//g'>> CHANGELOG.md
           rm CHANGELOG.md.temp
           git config --global user.name "Quackals"
           git config --global user.email "nobody@qqcw.us"
