@@ -9,7 +9,7 @@ jobs:
   get-version:
     runs-on: ubuntu-latest
     outputs:
-      version: steps.get-branch-name.outputs.version
+      version: ${{ steps.get-branch-name.outputs.version }}
 
     steps:
       - name: Check Out Repo and Tag History
@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          
+
       - run: echo ${{ needs.get-version.outputs.version }}
 
       - id: version-tags
