@@ -41,8 +41,9 @@ jobs:
 
       - id: version-tags
         run: |
+          git tag --list "${{ needs.get-version.outputs.version }}+"
           LAST_TAG_FOR_BRANCH=$(git tag --list "${{ needs.get-version.outputs.version }}+" | head -n 1 | cut -d "+" -f2)
-          echo $LAST_TAG_FOR_BRANCH
+          echo $((LAST_TAG_FOR_BRANCH))
           VERSION=$(git tag --list "${{ needs.get-version.outputs.version }}+" | head -n 1 | cut -d "+" -f1)
           echo ::set-output name=old-incrementer::$(( LAST_TAG_FOR_BRANCH ))
           echo ::set-output name=new-incrementer::$(( LAST_TAG_FOR_BRANCH+1 ))
