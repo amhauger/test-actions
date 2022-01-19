@@ -1,5 +1,11 @@
 # Changes Released To Production
 ---------------------------------
+## Release 4.2.1
+* ### Merge pull request #22 from amhauger/test/get-changes-in-step-each-time
+  * hash: 8acd1b4
+  * test: try different formatting for releases
+
+---------------------------------
 ## Release 4.2.0
 * ### Merge pull request #21 from amhauger/test/get-changes-in-step-each-time
   * hash: ff9c4d8
