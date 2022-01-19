@@ -58,7 +58,7 @@ jobs:
           echo "---------------------------------" >> CHANGELOG.md
           echo "## Release ${{ github.event.inputs.next-release }}" >> CHANGELOG.md
           echo ${{ steps.get-changes.outputs.changes }} >> CHANGELOG.md
-          cat CHANGELOG.md.temp | sed 's/\# Changes Release To Production//g'>> CHANGELOG.md
+          cat CHANGELOG.md.temp | sed 's/\# Changes Released To Production//g'>> CHANGELOG.md
           rm CHANGELOG.md.temp
           git config --global user.name "Quackals"
           git config --global user.email "nobody@qqcw.us"
