@@ -1,5 +1,11 @@
 # Changes Released To Production
 ---------------------------------
+## Release 4.2.2
+* ### Merge pull request #23 from amhauger/test/get-changes-in-step-each-time
+  * hash: 053b65c
+  * test: create and remove body file for releases
+
+---------------------------------
 ## Release 4.2.1
 * ### Merge pull request #22 from amhauger/test/get-changes-in-step-each-time
   * hash: 8acd1b4
