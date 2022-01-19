@@ -1,5 +1,19 @@
 # Changes Released To Production
 ---------------------------------
+## Release 4.2.3
+* ### Merge pull request #26 from amhauger/v4.2.2
+  * hash: ce88061
+  * Merge pull request #24 from amhauger/test/hotfix-workflow
+
+* ### Merge pull request #25 from amhauger/test/hotfix-workflow
+  * hash: b960f63
+  * fix: release branch name change
+
+* ### Merge pull request #24 from amhauger/test/hotfix-workflow
+  * hash: 9ac0f4b
+  * test: hotfix workflow
+
+---------------------------------
 ## Release 4.2.2
 * ### Merge pull request #23 from amhauger/test/get-changes-in-step-each-time
   * hash: 053b65c
