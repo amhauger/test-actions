@@ -73,7 +73,7 @@ jobs:
         id: open-release-branch
         uses: peterjgrainger/action-create-branch@v2.0.1
         with:
-          branch: v${{ github.event.inputs.next-release }}
+          branch: release/v${{ github.event.inputs.next-release }}
 
   create-release-tag:
     runs-on: ubuntu-latest
