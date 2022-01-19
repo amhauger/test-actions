@@ -20,7 +20,7 @@ jobs:
       - name: Get Branch Name (contains release version)
         id: get-branch-name
         run: |
-          echo ${{GITHUB_REF#refs/heads/release/}}
+          git branch --show-current
           echo ::set-output name=version::${{ GITHUB_REF#refs/heads/release/ }}
 
   create-new-releases:
