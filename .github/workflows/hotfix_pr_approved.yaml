@@ -45,9 +45,6 @@ jobs:
           LAST_TAG_FOR_BRANCH=$(git tag --list "${{ needs.get-version.outputs.version }}*" | head -n 1 | cut -d "+" -f2)
           NEW_BRANCH_TAG=$(( $LAST_TAG_FOR_BRANCH + 1 ))
           VERSION=$(git tag --list "${{ needs.get-version.outputs.version }}*" | head -n 1 | cut -d "+" -f1)
-          echo $LAST_TAG_FOR_BRANCH
-          echo $NEW_BRANCH_TAG
-          echo $VERSION
           echo ::set-output name=old-incrementer::$LAST_TAG_FOR_BRANCH
           echo ::set-output name=new-incrementer::$NEW_BRANCH_TAG
           echo ::set-output name=version::$VERSION
@@ -66,8 +63,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: "release-${{ steps.increment-version.outputs.next-version }}.tar.gz"
           bodyFile: body.md
-          commit: ${{ needs.get-version.outputs.version }}
+          commit: ${{ steps.increment-version.outputs.next-version }}
           tag: ${{ steps.increment-version.outputs.next-version }}
-
-      - run: |
-          rm body.md
