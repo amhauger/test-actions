@@ -9,7 +9,7 @@ jobs:
   get-version:
     runs-on: ubuntu-latest
     outputs:
-      version: steps.get-branch-name.outputs.version
+      version: ${{ steps.get-branch-name.outputs.version }}
 
     steps:
       - name: Check Out Repo and Tag History
@@ -19,7 +19,9 @@ jobs:
 
       - name: Get Branch Name (contains release version)
         id: get-branch-name
-        run: echo ::set-output name=version::$(echo ${GITHUB_REF#refs/heads/release/})
+        run: |
+          git branch --show-current | cut -d "/" -f2
+          echo ::set-output name=version::$(git branch --show-current | cut -d "/" -f2)
 
   create-new-releases:
     runs-on: ubuntu-latest
@@ -37,13 +39,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - id: version-tags
+      - name: Create Version Tags
+        id: version-tags
         run: |
-          LAST_TAG_FOR_BRANCH=$(git tag --list "${{ needs.get-version.outputs.version }}+" | head -n 1 | cut -d "+" -f2)
-          VERSION=$(git tag --list "${{ needs.get-version.outputs.version }}+" | head -n 1 | cut -d "+" -f1)
-          echo ::set-output name=old-incrementer::$(( LAST_TAG_FOR_BRANCH ))
-          echo ::set-output name=new-incrementer::$(( LAST_TAG_FOR_BRANCH+1 ))
-          echo ::set-output name=version::$(( VERSION ))
+          LAST_TAG_FOR_BRANCH=$(git tag --list "${{ needs.get-version.outputs.version }}*" | head -n 1 | cut -d "+" -f2)
+          NEW_BRANCH_TAG=$(( $LAST_TAG_FOR_BRANCH + 1 ))
+          VERSION=$(git tag --list "${{ needs.get-version.outputs.version }}*" | head -n 1 | cut -d "+" -f1)
+          echo ::set-output name=old-incrementer::$LAST_TAG_FOR_BRANCH
+          echo ::set-output name=new-incrementer::$NEW_BRANCH_TAG
+          echo ::set-output name=version::$VERSION
 
       - id: increment-version
         run: |
@@ -59,8 +63,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: "release-${{ steps.increment-version.outputs.next-version }}.tar.gz"
           bodyFile: body.md
-          commit: ${{ needs.get-version.outputs.version }}
+          # commit: ${{ steps.increment-version.outputs.next-version }}
           tag: ${{ steps.increment-version.outputs.next-version }}
-
-      - run: |
-          rm body.md
