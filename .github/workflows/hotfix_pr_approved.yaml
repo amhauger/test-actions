@@ -63,5 +63,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: "release-${{ steps.increment-version.outputs.next-version }}.tar.gz"
           bodyFile: body.md
-          commit: ${{ steps.increment-version.outputs.next-version }}
+          # commit: ${{ steps.increment-version.outputs.next-version }}
           tag: ${{ steps.increment-version.outputs.next-version }}
