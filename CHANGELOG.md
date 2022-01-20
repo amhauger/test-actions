@@ -1,5 +1,107 @@
 # Changes Released To Production
 ---------------------------------
+## Release 4.2.5
+* ### Merge pull request #52 from amhauger/release/v4.2.3
+  * hash: dc59a45
+  * Release v4.2.3
+
+* ### Merge pull request #51 from amhauger/release/v4.2.4
+  * hash: c602f9f
+  * chore: update README
+
+* ### Merge pull request #50 from amhauger/test/hotfix-workflow
+  * hash: b97ebdf
+  * remove 'commit' line of ncipollo action
+
+* ### Merge pull request #49 from amhauger/test/hotfix-workflow
+  * hash: d14cdc2
+  * try commit == tag in ncipollo action
+
+* ### Merge pull request #47 from amhauger/test/hotfix-workflow
+  * hash: dc429ed
+  * test: try incrementing outside the output
+
+* ### Merge pull request #46 from amhauger/test/hotfix-workflow
+  * hash: b6456f7
+  * chore: figure out if its incrementing that's the problem
+
+* ### Merge pull request #45 from amhauger/test/hotfix-workflow
+  * hash: 5f8b430
+  * test: find out what's going on
+
+* ### Merge pull request #44 from amhauger/test/hotfix-workflow
+  * hash: 6f8c5c0
+  * fix: remove additional + sign in VERSION
+
+* ### Merge pull request #43 from amhauger/test/hotfix-workflow
+  * hash: 693b017
+  * test: what's being stored?
+
+* ### Merge pull request #42 from amhauger/test/hotfix-workflow
+  * hash: 4a76235
+  * test: try
+
+* ### Merge pull request #41 from amhauger/test/hotfix-workflow
+  * hash: e4a5c11
+  * fix: remove '+' from LAST_TAG_FOR_BRANCH variable
+
+* ### Merge pull request #40 from amhauger/test/hotfix-workflow
+  * hash: c3acd0e
+  * fix: doi doi doi
+
+* ### Merge pull request #39 from amhauger/test/hotfix-workflow
+  * hash: a600476
+  * test: is setting the output giving us the version?
+
+* ### Merge pull request #38 from amhauger/test/hotfix-workflow
+  * hash: 614b0fb
+  * test: locally tested changes 2
+
+* ### Merge pull request #37 from amhauger/test/hotfix-workflow
+  * hash: f3b7018
+  * test: locally tested changes
+
+* ### Merge pull request #36 from amhauger/test/hotfix-workflow
+  * hash: f77eac0
+  * test: find last incrementer 5
+
+* ### Merge pull request #35 from amhauger/test/hotfix-workflow
+  * hash: 0fb24ef
+  * test: find last incrementer 4
+
+* ### Merge pull request #34 from amhauger/test/hotfix-workflow
+  * hash: 6cf0164
+  * test: find last incrementer 3
+
+* ### Merge pull request #33 from amhauger/test/hotfix-workflow
+  * hash: be787fa
+  * test: find last incrementer 2
+
+* ### Merge pull request #32 from amhauger/test/hotfix-workflow
+  * hash: 0b3f8ff
+  * test: find last incrementer
+
+* ### Merge pull request #31 from amhauger/test/hotfix-workflow
+  * hash: 1400162
+  * look at branch name attempt 5
+
+* ### Merge pull request #30 from amhauger/test/hotfix-workflow
+  * hash: 6c0ee6c
+  * look at branch name attempt 4
+
+* ### Merge pull request #29 from amhauger/test/hotfix-workflow
+  * hash: e4bd309
+  * look at branch name attempt 2
+
+* ### Merge pull request #28 from amhauger/test/hotfix-workflow
+  * hash: 1798252
+  * look at branch name
+
+* ### Merge pull request #27 from amhauger/test/hotfix-workflow
+  * hash: 24b6557
+  * remove unnecessary files
+
+---------------------------------
 ## Release 4.2.4
 
 ---------------------------------
