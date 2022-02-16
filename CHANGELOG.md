@@ -1,5 +1,11 @@
 # Changes Released To Production
 ---------------------------------
+## Release 4.2.6
+* ### Merge pull request #53 from amhauger/fix/workflows
+  * hash: 753a905
+  * fix: hotfix workflow
+
+---------------------------------
 ## Release 4.2.5
 * ### Merge pull request #52 from amhauger/release/v4.2.3
   * hash: dc59a45
