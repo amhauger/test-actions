@@ -94,4 +94,4 @@ jobs:
       - name: Build Image
         id: build-qa-images
         run: |
-          docker build -f ./Dockerfile -t index.docker.io/ahauger/test-actions:v${{ needs.create-new-releases.outputs.version }}p${{ needs.create-new-releases.outputs.incrementer }}
+          docker build -f ./Dockerfile -t index.docker.io/ahauger/test-actions:v${{ needs.create-new-releases.outputs.version }}p${{ needs.create-new-releases.outputs.incrementer }} .
