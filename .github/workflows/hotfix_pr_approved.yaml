@@ -27,7 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [get-version]
     outputs:
-      new-version: steps.increment-version.outputs.next-version
+      version: ${{ steps.version-tags.outputs.version }}
+      incrementer: ${{ steps.version-tags.outputs.new-incrementer }}
     env:
       GO111MODULE: on
       GOPRIVATE: github.com/qqcw
@@ -42,7 +43,7 @@ jobs:
       - name: Create Version Tags
         id: version-tags
         run: |
-          LAST_TAG_FOR_BRANCH=$(git tag --list "${{ needs.get-version.outputs.version }}*" | head -n 1 | cut -d "+" -f2)
+          LAST_TAG_FOR_BRANCH=$(git tag --list "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2)
           NEW_BRANCH_TAG=$(( $LAST_TAG_FOR_BRANCH + 1 ))
           VERSION=$(git tag --list "${{ needs.get-version.outputs.version }}*" | head -n 1 | cut -d "+" -f1)
           echo ::set-output name=old-incrementer::$LAST_TAG_FOR_BRANCH
@@ -65,3 +66,32 @@ jobs:
           bodyFile: body.md
           # commit: ${{ steps.increment-version.outputs.next-version }}
           tag: ${{ steps.increment-version.outputs.next-version }}
+
+  create-new-images:
+    runs-on: ubuntu-latest
+    needs: [create-new-releases]
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Check Out Repo and Tag History
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      
+      - name: Setup Go module cache
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Build Image
+        id: build-qa-images
+        run: |
+          docker build -f ./Dockerfile -t index.docker.io/ahauger/test-actions:v${{ needs.create-new-releases.outputs.version }}p${{ needs.create-new-releases.outputs.incrementer }}
