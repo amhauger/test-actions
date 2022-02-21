@@ -99,43 +99,13 @@ jobs:
       - name: Build and Push QA Images
         id: build-qa-crm
         run: |
-          docker build -q -f ./qqsales/Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.qa-version }} .
-          echo "built qqsales"
-          docker build -q -f ./qqcrm/Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.qa-version }} .
-          echo "built qqcrm"
-          docker build -q -f ./qqsearch/Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.qa-version }} .
-          echo "built qqsearch"
-          docker build -q -f ./qqid/Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.qa-version }} .
-          echo "built qqid"
-          docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
-          echo "pushing qqsales"
-          docker push index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.qa-version }}
-          echo "pushing qqcrm"
-          docker push index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.qa-version }}
-          echo "pushing qqsearch"
-          docker push index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.qa-version }}
-          echo "pushing qqid"
+          docker build -q -f ./Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.qa-version }} .
           docker push index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.qa-version }}
 
       - name: Build and Push Release Images
         id: build-crm
         run: |
-          docker build -q -f ./qqsales/Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.prod-version }} .
-          echo "built qqsales"
-          docker build -q -f ./qqcrm/Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.prod-version }} .
-          echo "built qqcrm"
-          docker build -q -f ./qqsearch/Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.prod-version }} .
-          echo "built qqsearch"
-          docker build -q -f ./qqid/Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.prod-version }} .
-          echo "built qqid"
-          docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
-          echo "pushing qqsales"
-          docker push index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.prod-version }}
-          echo "pushing qqcrm"
-          docker push index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.prod-version }}
-          echo "pushing qqsearch"
-          docker push index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.prod-version }}
-          echo "pushing qqid"
+          docker build -q -f ./Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.prod-version }} .
           docker push index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.prod-version }}
           
   create-release-branch:
