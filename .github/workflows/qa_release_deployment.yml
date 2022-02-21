@@ -100,13 +100,11 @@ jobs:
         id: build-qa-crm
         run: |
           docker build -q -f ./Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.qa-version }} .
-          docker push index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.qa-version }}
 
       - name: Build and Push Release Images
         id: build-crm
         run: |
           docker build -q -f ./Dockerfile -t index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.prod-version }} .
-          docker push index.docker.io/ahauger/test-actions:${{ steps.create-version-strings.outputs.prod-version }}
           
   create-release-branch:
     runs-on: ubuntu-latest
