@@ -93,7 +93,7 @@ jobs:
         run: |
           G_REV=$(git rev-parse --short HEAD)
           echo ::set-output name=short-sha::$G_REV
-          echo ::set-output name=qa-version::"qa-v${{ githhub.event.inputs.next-release }}p0-$G_REV"
+          echo ::set-output name=qa-version::"qa-v${{ github.event.inputs.next-release }}p0-$G_REV"
           echo ::set-output name=prod-version::"v${{ github.event.inputs.next-release }}p0-$G_REV"
 
       - name: Build and Push QA Images
