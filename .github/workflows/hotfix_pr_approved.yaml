@@ -27,12 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [get-version]
     outputs:
-      version: ${{ steps.version-tags.outputs.version }}
-      incrementer: ${{ steps.version-tags.outputs.new-incrementer }}
-    env:
-      GO111MODULE: on
-      GOPRIVATE: github.com/qqcw
-      SSH_KEY: ${{ secrets.SEGMENT_TYPES_SSH_KEY }}
+      dockerhub-version: ${{ steps.version-tags.outputs.next-dh-version }}
 
     steps:
       - name: Check Out Repo and Tag History
@@ -40,37 +35,54 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create Version Tags
-        id: version-tags
+      - id: version-tags
         run: |
-          LAST_TAG_FOR_BRANCH=$(git tag --list "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2)
-          NEW_BRANCH_TAG=$(( $LAST_TAG_FOR_BRANCH + 1 ))
-          VERSION=$(git tag --list "${{ needs.get-version.outputs.version }}*" | head -n 1 | cut -d "+" -f1)
-          echo ::set-output name=old-incrementer::$LAST_TAG_FOR_BRANCH
-          echo ::set-output name=new-incrementer::$NEW_BRANCH_TAG
-          echo ::set-output name=version::$VERSION
+          VERSION=""
+          LAST_I=""
+          NEW_I=""
+          OLD_SHA=""
 
-      - id: increment-version
-        run: |
-          echo ::set-output name=next-version::"${{ steps.version-tags.outputs.version }}+${{ steps.version-tags.outputs.new-incrementer }}"
+          LAST_BRANCH_TAG=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1)
+          CURRENT_SHA=$(git rev-parse --short HEAD)
+
+          if [[ $LAST_BRANCH_TAG == *+*-* ]]
+          then
+            VERSION=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version}}+*" | head -n 1 | cut -d "+" -f1)
+            LAST_I=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2 | cut -d "-" -f1)
+            NEW_I=$(( $last_i + 1 ))
+            OLD_SHA=-$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2 | cut -d "-" -f2)
+            
+          elif [[ $last_branch_tag == *+* ]]
+          then
+            VERSION=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version}}+*" | head -n 1 | cut -d "+" -f1)
+            LAST_I=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2)
+            NEW_I=$(( $last_i + 1 ))
+
+          else
+            VERSION=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version}}+*" | head -n 1 
+          fi
+
+          echo ::set-output name=next-gh-version::$VERSION+$NEW_I-$CURRENT_SHA
+          echo ::set-output name=next-dh-version::$VERSION+$NEW_I-$CURRENT_SHA
+          echo ::set-output name=changelog-version::$VERSION+LAST_I$OLD_SHA
 
       - id: changes
         run: |
-          git log ${{ steps.version-tags.outputs.version }}+${{ steps.version-tags.outputs.old-incrementer }}..HEAD --merges --pretty=format:"# %s%n## hash %h%n## %b%n" > body.md
+          git log ${{steps.version-tags.outputs.changelog-version}}..release/${{ needs.get-version.outputs.version }} --pretty=format:"# %s%n## hash %h%n## %b%n" > body.md
 
       - name: Create New Release Tag and Object
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "release-${{ steps.increment-version.outputs.next-version }}.tar.gz"
+          artifacts: "release-${{ steps.version-tags.outputs.next-gh-version }}"
           bodyFile: body.md
-          # commit: ${{ steps.increment-version.outputs.next-version }}
-          tag: ${{ steps.increment-version.outputs.next-version }}
+          tag: ${{ steps.version-tags.outputs.next-gh-version }}
 
   create-new-images:
     runs-on: ubuntu-latest
     needs: [create-new-releases]
     env:
+      SSH_KEY: ${{ secrets.SEGMENT_TYPES_SSH_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
@@ -82,7 +94,7 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: 1.16
-      
+
       - name: Setup Go module cache
         uses: actions/cache@v2
         with:
@@ -91,7 +103,54 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Build Image
+      - name: Setup SSH Private Key
+        run: |
+          mkdir ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          echo "${SSH_KEY}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Configure Git for private modules
+        run: git config --global url."git@github.com:".insteadOf "https://github.com/"
+
+      - name: Build and Push QA Microservice Images
         id: build-qa-images
         run: |
-          docker build -f ./Dockerfile -t index.docker.io/ahauger/test-actions:v${{ needs.create-new-releases.outputs.version }}p${{ needs.create-new-releases.outputs.incrementer }}
+          echo "building qqsales"
+          docker build -q -f ./qqsales/Dockerfile -t index.docker.io/ahauger/test-actions:qa-${{ needs.create-new-releases.outputs.dockerhub-version }} .
+          echo "building qqcrm"
+          docker build -q -f ./qqcrm/Dockerfile -t index.docker.io/ahauger/test-actions:qa-${{ needs.create-new-releases.outputs.dockerhub-version }} .
+          echo "building qqsearch"
+          docker build -q -f ./qqsearch/Dockerfile -t index.docker.io/ahauger/test-actions:qa-${{ needs.create-new-releases.outputs.dockerhub-version }} .
+          echo "building qqid"
+          docker build -q -f ./qqid/Dockerfile -t index.docker.io/ahauger/test-actions:qa-${{ needs.create-new-releases.outputs.dockerhub-version }} .
+          docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
+          echo "pushing qqsales"
+          docker push index.docker.io/ahauger/test-actions:qa-${{ needs.create-new-releases.outputs.dockerhub-version }}
+          echo "pushing qqcrm"
+          docker push index.docker.io/ahauger/test-actions:qa-${{ needs.create-new-releases.outputs.dockerhub-version }}
+          echo "pushing qqsearch"
+          docker push index.docker.io/ahauger/test-actions:qa-${{ needs.create-new-releases.outputs.dockerhub-version }}
+          echo "pushing qqid"
+          docker push index.docker.io/ahauger/test-actions:qa-${{ needs.create-new-releases.outputs.dockerhub-version }}
+      
+      - name: Build and Push Prod Microservice Images
+        id: build-prod-images
+        run: |
+          echo "building qqsales"
+          docker build -q -f ./qqsales/Dockerfile --build-arg SSH_PRIVATE_KEY="$SSH_KEY" -t index.docker.io/ahauger/test-actions:${{ needs.create-new-releases.outputs.dockerhub-version }} .
+          echo "building qqcrm"
+          docker build -q -f ./qqcrm/Dockerfile --build-arg SSH_PRIVATE_KEY="$SSH_KEY" -t index.docker.io/ahauger/test-actions:${{ needs.create-new-releases.outputs.dockerhub-version }} .
+          echo "building qqsearch"
+          docker build -q -f ./qqsearch/Dockerfile --build-arg SSH_PRIVATE_KEY="$SSH_KEY" -t index.docker.io/ahauger/test-actions:${{ needs.create-new-releases.outputs.dockerhub-version }} .
+          echo "building qqid"
+          docker build -q -f ./qqid/Dockerfile -t index.docker.io/ahauger/test-actions:${{ needs.create-new-releases.outputs.dockerhub-version }} .
+          docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
+          echo "pushing qqsales"
+          docker push index.docker.io/ahauger/test-actions:${{ needs.create-new-releases.outputs.dockerhub-version }}
+          echo "pushing qqcrm"
+          docker push index.docker.io/ahauger/test-actions:${{ needs.create-new-releases.outputs.dockerhub-version }}
+          echo "pushing qqsearch"
+          docker push index.docker.io/ahauger/test-actions:${{ needs.create-new-releases.outputs.dockerhub-version }}
+          echo "pushing qqid"
+          docker push index.docker.io/ahauger/test-actions:${{ needs.create-new-releases.outputs.dockerhub-version }}
