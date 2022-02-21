@@ -1,5 +1,24 @@
 # Changes Released To Production
 ---------------------------------
+## Release 4.2.7\n
+02/21/22 23:46:11
+  * ##### branch:  amhauger/test/new-workflow-testing
+  * hash: d8b6aac
+  * chore: go mod update
+
+  * ##### branch:  amhauger/test/new-workflow-testing
+  * hash: bbbab21
+  * fix: remove all traces of qq microservices
+
+  * ##### branch:  amhauger/test/new-workflow-testing
+  * hash: 8432042
+  * fix: typo in qa workflow
+
+  * ##### branch:  amhauger/test/new-workflow-testing
+  * hash: 84393b3
+  * test: try hotfix and qa workflow fixes here
+
+---------------------------------
 ## Release 4.2.6
 * ### Merge pull request #53 from amhauger/fix/workflows
   * hash: 753a905
