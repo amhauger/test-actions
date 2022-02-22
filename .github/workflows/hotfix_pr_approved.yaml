@@ -52,7 +52,7 @@ jobs:
             NEW_I=$(( $LAST_I + 1 ))
             OLD_SHA=-$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2 | cut -d "-" -f2)
             LAST_I_STRING=+$LASTS_I
-          elif [[ $last_branch_tag == *+* ]]
+          elif [[ $last_branch_tag == *+* && $LAST_BRANCH_TAG != *-* ]]
           then
             VERSION=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version}}+*" | head -n 1 | cut -d "+" -f1)
             LAST_I=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2)
