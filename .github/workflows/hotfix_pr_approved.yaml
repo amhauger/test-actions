@@ -64,7 +64,7 @@ jobs:
 
           echo ::set-output name=next-gh-version::$VERSION+$NEW_I-$CURRENT_SHA
           echo ::set-output name=next-dh-version::$VERSION+$NEW_I-$CURRENT_SHA
-          echo ::set-output name=changelog-version::$VERSION+LAST_I$OLD_SHA
+          echo ::set-output name=changelog-version::$VERSION+$LAST_I$OLD_SHA
 
       - id: changes
         run: |
