@@ -60,6 +60,7 @@ jobs:
             LAST_I_STRING=+$LAST_I
           else
             VERSION=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version}}*" | head -n 1)
+            NEW_I=1
           fi
 
           echo ::set-output name=next-gh-version::$VERSION+$NEW_I-$CURRENT_SHA
