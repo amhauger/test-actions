@@ -45,7 +45,7 @@ jobs:
           LAST_BRANCH_TAG=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1)
           CURRENT_SHA=$(git rev-parse --short HEAD)
 
-          if [[ $LAST_BRANCH_TAG == *+*-* ]]
+          if [[ $LAST_BRANCH_TAG == *+* && $LAST_BRANCH_TAG == *-* ]]
           then
             VERSION=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version}}+*" | head -n 1 | cut -d "+" -f1)
             LAST_I=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2 | cut -d "-" -f1)
