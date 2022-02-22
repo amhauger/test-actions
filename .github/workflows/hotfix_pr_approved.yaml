@@ -52,7 +52,7 @@ jobs:
             LAST_I=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2 | cut -d "-" -f1)
             NEW_I=$(( $LAST_I + 1 ))
             OLD_SHA=-$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2 | cut -d "-" -f2)
-            LAST_I_STRING=+$LASTS_I
+            LAST_I_STRING=+$LAST_I
           elif [[ "$LAST_BRANCH_TAG" == *"+"* && "$LAST_BRANCH_TAG" != *"-"* ]]
           then
             echo "elif"
