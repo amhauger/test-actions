@@ -38,7 +38,7 @@ jobs:
       - id: version-tags
         run: |
           VERSION=""
-          LAST_I=""
+          LAST_I_STRING=""
           NEW_I=""
           OLD_SHA=""
 
@@ -49,22 +49,22 @@ jobs:
           then
             VERSION=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version}}+*" | head -n 1 | cut -d "+" -f1)
             LAST_I=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2 | cut -d "-" -f1)
-            NEW_I=$(( $last_i + 1 ))
+            NEW_I=$(( $LAST_I + 1 ))
             OLD_SHA=-$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2 | cut -d "-" -f2)
-            
+            LAST_I_STRING=+$LASTS_I
           elif [[ $last_branch_tag == *+* ]]
           then
             VERSION=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version}}+*" | head -n 1 | cut -d "+" -f1)
             LAST_I=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version }}+*" | head -n 1 | cut -d "+" -f2)
-            NEW_I=$(( $last_i + 1 ))
-
+            NEW_I=$(( $LAST_I + 1 ))
+            LAST_I_STRING=+$LAST_I
           else
-            VERSION=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version}}+*" | head -n 1)
+            VERSION=$(git tag --list --sort=-version:refname "${{ needs.get-version.outputs.version}}*" | head -n 1)
           fi
 
           echo ::set-output name=next-gh-version::$VERSION+$NEW_I-$CURRENT_SHA
           echo ::set-output name=next-dh-version::$VERSION+$NEW_I-$CURRENT_SHA
-          echo ::set-output name=changelog-version::$VERSION+$LAST_I$OLD_SHA
+          echo ::set-output name=changelog-version::$VERSION+$LAST_I_STRING$OLD_SHA
 
       - id: changes
         run: |
