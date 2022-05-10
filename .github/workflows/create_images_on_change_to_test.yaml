@@ -9,12 +9,14 @@ jobs:
   build-image:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
+      - name: verify test dir changed
+        id: verify-test-dir-changed
+        uses: tj-actions/verify-changed-files@v9
         with:
-          fetch-depth: 0
-          persist-credentials: false
+          files: |
+            ./test
 
       - name: Say Goodnight Kevin
+        if: contains(steps.verify-test-dir-changed.outputs.changed_files, './test')
         run: |
-          echo $(git diff ./test)
+          echo "Goodnight Kevin"
