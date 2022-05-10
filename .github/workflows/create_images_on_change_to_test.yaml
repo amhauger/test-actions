@@ -13,12 +13,10 @@ jobs:
 
       - name: verify test dir changed
         id: verify-test-dir-changed
-        uses: tj-actions/verify-changed-files@v9
-        with:
-          files: |
-            test
+        run: |
+          echo ::set-output name=test-output::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} $${{ github.sha }} -- ./test )
 
       - name: Say Goodnight Kevin
-        if: contains(steps.verify-test-dir-changed.outputs.changed_files, 'test')
+        if: ${{ steps.verify-test-dir-changed.outputs.test-output }}
         run: |
           echo "Goodnight Kevin"
