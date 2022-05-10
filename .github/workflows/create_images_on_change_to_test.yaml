@@ -16,6 +16,5 @@ jobs:
           persist-credentials: false
 
       - name: Say Goodnight Kevin
-        if: ${{ git diff ./test }}
         run: |
-          echo "Goodnight Kevin"
+          echo $(git diff ./test)
