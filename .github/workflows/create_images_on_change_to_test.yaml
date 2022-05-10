@@ -9,6 +9,8 @@ jobs:
   build-image:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
       - name: verify test dir changed
         id: verify-test-dir-changed
         uses: tj-actions/verify-changed-files@v9
