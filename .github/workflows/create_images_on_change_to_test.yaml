@@ -4,11 +4,10 @@ on:
   push:
     branches: 
       - main
-    paths: 
-      - ./test
 
 jobs:
   build-image:
+    if: ${{ git diff ./test }}
     runs-on: ubuntu-latest
     steps:
       - name: Say Goodnight Kevin
