@@ -1,0 +1,16 @@
+name: create images only when ./test is changed
+
+on:
+  push:
+    branches: 
+      - main
+    paths: 
+      - ./test
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say Goodnight Kevin
+        run: |
+          echo "Goodnight Kevin"
