@@ -4,23 +4,14 @@ on:
   push:
     branches: 
       - main
+    paths:
+      - 'test/**'
 
 jobs:
   build-image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: verify test dir changed
-        id: verify-test-dir-changed
-        run: |
-          echo ${{ github.event.push.ref }}
-          echo ${{ github.event.push.before }}
-          echo ${{ github.event.push.after }}
-          echo $(git diff --name-only --diff-filter=ACMRT ${{ github.event.push.before }} ${{ github.event.push.after }})
-          echo ::set-output name=test-output::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} -- ./test )
-
       - name: Say Goodnight Kevin
-        if: ${{ steps.verify-test-dir-changed.outputs.test-output }}
         run: |
           echo "Goodnight Kevin"
