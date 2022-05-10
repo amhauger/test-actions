@@ -7,9 +7,15 @@ on:
 
 jobs:
   build-image:
-    if: ${{ git diff ./test }}
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
       - name: Say Goodnight Kevin
+        if: ${{ git diff ./test }}
         run: |
           echo "Goodnight Kevin"
