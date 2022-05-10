@@ -17,6 +17,7 @@ jobs:
           echo ${{ github.event.push.ref }}
           echo ${{ github.event.push.before }}
           echo ${{ github.event.push.after }}
+          echo $(git diff --name-only --diff-filter=ACMRT ${{ github.event.push.before }} ${{ github.event.push.after }})
           echo ::set-output name=test-output::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} -- ./test )
 
       - name: Say Goodnight Kevin
