@@ -1,0 +1,1 @@
+name: create images only when ./test is changed
