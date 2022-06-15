@@ -119,8 +119,8 @@ func main() {
 	}
 	log.Info().Interface("config", c).Msg("configs for test-actions app")
 
-	log.Debug().Str("service", "qqcrm").Msg("spooling up open telemetry to send data to Honeycomb")
-	shutdownFunc, otelErr := setupOTelAutoInstrumentation("qqcrm", c.Honeycomb)
+	log.Debug().Str("service", "test-actions").Msg("spooling up open telemetry to send data to Honeycomb")
+	shutdownFunc, otelErr := setupOTelAutoInstrumentation("test-actions", c.Honeycomb)
 	if otelErr != nil {
 		log.Fatal().Err(otelErr).Msg("error setting up open telemetry for monitoring")
 	}
