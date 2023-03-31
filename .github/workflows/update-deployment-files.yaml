@@ -1,0 +1,33 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-multiple-yaml-files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: update deployment files in structure
+        uses: fjogeleit/yaml-update-action@v0.12.3
+        with:
+          branch: ci/test-action-update-yaml-$(git rev-parse --short HEAD)
+          commitChange: true
+          createPR: true
+          labels: "automerge"
+          masterBranchName: main
+          message: 'ci: test multiple file changes'
+          targetBranch: main
+          title: 'test: test multiple file changes'
+          workdir: deploy
+          changes: |
+            {
+              "test-yaml-updates/test-deployment.yaml": {
+                "spec.template.spec.containers.0.image": "hello.there"
+              },
+              "test-yaml-updates/test-deployment-copy.yaml": {
+                "spec.template.spec.containers.0.image": "general.kenobi"
+              },
+            }
