@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: qqid
+    app.kubernetes.io/instance: qsys.prd.qqcw.us
+    app.kubernetes.io/managed-by: flux-cd
+    version: v1
+  name: qqid-v1
+  namespace: production
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: qqid
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: qqid
+        app.kubernetes.io/instance: qsys.prd.qqcw.us
+        app.kubernetes.io/managed-by: flux-cd
+        version: v1
+    spec:
+      containers:
+      - env:
+        - name: HONEYCOMB_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: honeycomb-secret
+              key: token
+        - name: HONEYCOMB_DATASET
+          value: "qqid"
+        image: index.docker.io/quickquack/qqid:v0.45.36p0-ffffefbb
+        imagePullPolicy: Always
+        name: qqid
+        ports:
+        - containerPort: 4010
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+      imagePullSecrets:
+          - name: regcred
+      restartPolicy: Always
