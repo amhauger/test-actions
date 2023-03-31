@@ -21,7 +21,6 @@ jobs:
           message: 'ci: test multiple file changes'
           targetBranch: main
           title: 'test: test multiple file changes'
-          workdir: deploy
           changes: |
             {
               "test-yaml-updates/test-deployment.yaml": {
