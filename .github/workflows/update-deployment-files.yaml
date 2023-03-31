@@ -10,10 +10,16 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: short sha
+        id: short-sha
+        run: |
+          echo "short-sha=$(git revparse --short HEAD)" >> $GITHUB_OUTPUT
+      
       - name: update deployment files in structure
         uses: fjogeleit/yaml-update-action@v0.12.3
         with:
-          branch: ci/test-action-update-yaml-$(git rev-parse --short HEAD)
+          branch: ci/test-action-update-yaml-${{ steps.short-sha.outputs.short-sha }}
           commitChange: true
           createPR: true
           labels: "automerge"
