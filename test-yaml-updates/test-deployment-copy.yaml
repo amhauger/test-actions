@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,24 +23,24 @@ spec:
         version: v1
     spec:
       containers:
-      - env:
-        - name: HONEYCOMB_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: honeycomb-secret
-              key: token
-        - name: HONEYCOMB_DATASET
-          value: "qqid"
-        image: index.docker.io/quickquack/qqid:v0.45.36p0-ffffefbb
-        imagePullPolicy: Always
-        name: qqid
-        ports:
-        - containerPort: 4010
-          protocol: TCP
-        resources:
-          requests:
-            cpu: 50m
-            memory: 64Mi
+        - env:
+            - name: HONEYCOMB_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: honeycomb-secret
+                  key: token
+            - name: HONEYCOMB_DATASET
+              value: qqid
+          image: general.kenobi
+          imagePullPolicy: Always
+          name: qqid
+          ports:
+            - containerPort: 4010
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
       imagePullSecrets:
-          - name: regcred
+        - name: regcred
       restartPolicy: Always
